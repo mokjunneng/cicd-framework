@@ -1,0 +1,13 @@
+name: "go lint"
+description: "linting for GO"
+inputs:
+  # Path/s to execute lint
+  path:
+    required: true
+outputs:
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/golint.sh ${{ inputs.path }}
+      shell: bash
+# TODO: How to pipe lint output to STDOUT for us to inspect in Github console

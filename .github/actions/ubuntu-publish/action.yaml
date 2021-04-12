@@ -1,0 +1,10 @@
+name: "publish - ubuntu"
+description: "publish file package as binary to S3"
+inputs:
+outputs:
+  directoryPath:
+    description:
+    required: true
+  remoteS3Path:
+    description:
+    required: true
