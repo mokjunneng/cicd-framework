@@ -4,10 +4,25 @@ inputs:
   # Path/s to execute test
   path:
     required: true
+  test-report-name:
+    required: true
+  test-coverage-name:
+    required: true
 outputs:
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/golint.sh ${{ inputs.path }}
+    - run: cd ${{ inputs.path }}
       shell: bash
-# TODO: How to pipe lint output to STDOUT for us to inspect in Github console
+    - run: go test -coverprofile=coverage.out -json > report.json
+      shell: bash
+    - name: upload test results as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.test-report-name }}
+        path: test.log
+    - name: upload test coverage as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.test-coverage-name }}
+        path: test.log

@@ -10,4 +10,3 @@ runs:
   steps:
     - run: ${{ github.action_path }}/gofmt.sh ${{ inputs.workingDir }}
       shell: bash
-# TODO: How to pipe lint output to STDOUT for us to inspect in Github console

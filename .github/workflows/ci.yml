@@ -1,8 +1,5 @@
 name: CI
-on:
-  pull_request:
-    branches: main
-    tags:
+on: [push, pull_request]
 jobs:
   # TODO: How to copy repository to container?
   lint:
@@ -15,6 +12,7 @@ jobs:
     steps:
       # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
       # Choose the right linting action for your language
+      - uses: actions/checkout@v2
       - uses: actions/lint@v1
   test:
     container:
@@ -25,8 +23,11 @@ jobs:
       options:
     steps:
       # Choose the right testing action for your language
+      # TODO: How to reference repo's actions
+      # TODO: How to specify input for github actions
+      - uses: actions/checkout@v2
       - uses: actions/test@v1
-  sonarQube:
+  sonarScan:
     container:
       image:
       env:
@@ -34,4 +35,9 @@ jobs:
       volumes:
       options:
     steps:
-      - uses: actions/sonar-qube@v1
+      - uses: actions/checkout@v2
+      - uses: docker://sonarsource/sonar-scanner-cli:latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

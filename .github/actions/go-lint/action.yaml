@@ -4,10 +4,18 @@ inputs:
   # Path/s to execute lint
   path:
     required: true
+  output:
+    required: true
+  artifact-name:
+    required: true
 outputs:
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/golint.sh ${{ inputs.path }}
+    - run: ${{ github.action_path }}/golint.sh ${{ inputs.path }} ${{ inputs.output }}
       shell: bash
-# TODO: How to pipe lint output to STDOUT for us to inspect in Github console
+    - name: upload lint results as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.test-report-name }}
+        path: ${{ inputs.output }}
