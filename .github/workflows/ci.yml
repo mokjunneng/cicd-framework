@@ -1,7 +1,6 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  # TODO: How to copy repository to container?
   lint:
     container:
       image:
@@ -13,7 +12,12 @@ jobs:
       # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
       # Choose the right linting action for your language
       - uses: actions/checkout@v2
-      - uses: actions/lint@v1
+      - uses: ./.github/actions/go-lint
+        with:
+          path: ./app...
+          output: lint.xml # standardized path to match sonarqube properties
+          artifact-name: lint-result
+          #config-path:
   test:
     container:
       image:
@@ -23,10 +27,14 @@ jobs:
       options:
     steps:
       # Choose the right testing action for your language
-      # TODO: How to reference repo's actions
-      # TODO: How to specify input for github actions
       - uses: actions/checkout@v2
-      - uses: actions/test@v1
+      - uses: ./.github/actions/go-test
+        with:
+          path: ./test
+          test-report-artifact-name: test-report
+          test-report-path: tests.out # standardized path to match sonarqube properties
+          coverage-report-artifact-name: coverage-report
+          coverage-report-path: coverage.out # standardized path to match sonarqube properties
   sonarScan:
     container:
       image:
@@ -36,8 +44,23 @@ jobs:
       options:
     steps:
       - uses: actions/checkout@v2
-      - uses: docker://sonarsource/sonar-scanner-cli:latest
+      # - uses: docker://sonarsource/sonar-scanner-cli:latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Download test results
+        uses: actions/download-artifact@v1
+        with:
+          name: test-report
+          path: tests.out
+      - name: Download code coverage results
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage-report
+          path: coverage.out
+      - name: Analyze with SonarCloud
+        uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
