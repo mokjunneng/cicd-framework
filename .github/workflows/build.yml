@@ -1,6 +1,7 @@
 name: Build
 on: [push, pull_request]
 jobs:
+  # TODO: debug why cant run lint job, runner issue?
   lint:
     runs-on: ubuntu-latest
     # container:
@@ -14,7 +15,7 @@ jobs:
       # Choose the right linting action for your language
       - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/go-lint
+      - uses: .github/actions/go-lint
         with:
           path: ./app...
           output: lint.xml # standardized path to match sonarqube properties
@@ -35,7 +36,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/go-test
         with:
-          path: ./test
+          path: ./app/test
           test-report-artifact-name: test-report
           test-report-path: tests.out # standardized path to match sonarqube properties
           coverage-report-artifact-name: coverage-report
@@ -88,4 +89,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
-          args: s3 cp /github/home/build s3://bucket/key
+          args: s3 cp /github/home/build s3://atomicloud-cicd-test/build-${{ github.sha }}
