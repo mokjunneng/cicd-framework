@@ -3,11 +3,12 @@ on: [push, pull_request]
 jobs:
   lint:
     container:
-      image:
-      env:
-      ports:
-      volumes:
-      options:
+      golang:1.16.3-alpine3.13
+      # image:
+      # env:
+      # ports:
+      # volumes:
+      # options:
     steps:
       # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
       # Choose the right linting action for your language
@@ -19,12 +20,12 @@ jobs:
           artifact-name: lint-result
           #config-path:
   test:
-    container:
-      image:
-      env:
-      ports:
-      volumes:
-      options:
+    container: golang:1.16.3-alpine3.13
+    #   image:
+    #   env:
+    #   ports:
+    #   volumes:
+    #   options:
     steps:
       # Choose the right testing action for your language
       - uses: actions/checkout@v2
@@ -36,12 +37,6 @@ jobs:
           coverage-report-artifact-name: coverage-report
           coverage-report-path: coverage.out # standardized path to match sonarqube properties
   sonarScan:
-    container:
-      image:
-      env:
-      ports:
-      volumes:
-      options:
     steps:
       - uses: actions/checkout@v2
       # - uses: docker://sonarsource/sonar-scanner-cli:latest
