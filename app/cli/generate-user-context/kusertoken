@@ -1,0 +1,3 @@
+#! /bin/bash
+INPUT=$1
+echo $(kubectl describe secrets "$(kubectl describe serviceaccount ${INPUT} | grep -i Tokens | awk '{print $2}')" | grep token: | awk '{print $2}')

@@ -1,18 +1,18 @@
-name: CI
+name: Build
 on: [push, pull_request]
 jobs:
   lint:
-    runs-on: ubuntu-18.04
-    container:
-      golang:1.16.3-alpine3.13
-      # image:
-      # env:
-      # ports:
-      # volumes:
-      # options:
+    runs-on: ubuntu-latest
+    # container:
+    # image:
+    # env:
+    # ports:
+    # volumes:
+    # options:
     steps:
       # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
       # Choose the right linting action for your language
+      - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
       - uses: ./.github/actions/go-lint
         with:
@@ -21,9 +21,9 @@ jobs:
           artifact-name: lint-result
           #config-path:
   test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: lint
-    container: golang:1.16.3-alpine3.13
+    # container:
     #   image:
     #   env:
     #   ports:
@@ -31,6 +31,7 @@ jobs:
     #   options:
     steps:
       # Choose the right testing action for your language
+      - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
       - uses: ./.github/actions/go-test
         with:
@@ -40,8 +41,8 @@ jobs:
           coverage-report-artifact-name: coverage-report
           coverage-report-path: coverage.out # standardized path to match sonarqube properties
   sonarScan:
-    runs-on: ubuntu-18.04
-    needs: test
+    runs-on: ubuntu-latest
+    needs: [lint, test]
     steps:
       - uses: actions/checkout@v2
       # - uses: docker://sonarsource/sonar-scanner-cli:latest
@@ -64,3 +65,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, test, sonarScan]
+    steps:
+      - uses: actions/setup-go@v1
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/go-build
+        with:
+          packages: ./app
+          output: build
+          artifact-name: build

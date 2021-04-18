@@ -11,7 +11,6 @@ inputs:
   config-path:
     description: The path to the golangci-lint config yaml file
     required: false
-outputs:
 runs:
   using: "composite"
   steps:
