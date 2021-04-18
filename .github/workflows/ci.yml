@@ -22,6 +22,7 @@ jobs:
           #config-path:
   test:
     runs-on: ubuntu-18.04
+    needs: lint
     container: golang:1.16.3-alpine3.13
     #   image:
     #   env:
@@ -40,6 +41,7 @@ jobs:
           coverage-report-path: coverage.out # standardized path to match sonarqube properties
   sonarScan:
     runs-on: ubuntu-18.04
+    needs: test
     steps:
       - uses: actions/checkout@v2
       # - uses: docker://sonarsource/sonar-scanner-cli:latest
