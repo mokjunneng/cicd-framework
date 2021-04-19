@@ -15,12 +15,17 @@ jobs:
       # Choose the right linting action for your language
       - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
-      - uses: .github/actions/go-lint
+      - id: go-lint
+        uses: ./.github/actions/go-lint
         with:
           path: ./app...
           output: lint.xml # standardized path to match sonarqube properties
-          artifact-name: lint-result
           #config-path:
+      - name: Upload lint as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lint-result
+          path: lint.xml
   test:
     runs-on: ubuntu-latest
     needs: lint
@@ -37,10 +42,18 @@ jobs:
       - uses: ./.github/actions/go-test
         with:
           path: ./app/test
-          test-report-artifact-name: test-report
           test-report-path: tests.out # standardized path to match sonarqube properties
-          coverage-report-artifact-name: coverage-report
           coverage-report-path: coverage.out # standardized path to match sonarqube properties
+      - name: Upload test results as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: tests.out
+      - name: Upload test coverage as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage.out
   sonarScan:
     runs-on: ubuntu-latest
     needs: [lint, test]
@@ -72,6 +85,8 @@ jobs:
     steps:
       - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/go-build
         with:
           packages: ./app
@@ -90,3 +105,22 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           args: s3 cp /github/home/build s3://atomicloud-cicd-test/build-${{ github.sha }}
+  goreleaser:
+    runs-on: ubuntu-latest
+    needs: [lint, test, sonarScan]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

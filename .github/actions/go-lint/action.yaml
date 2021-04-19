@@ -6,8 +6,6 @@ inputs:
     required: true
   output:
     required: true
-  artifact-name:
-    required: true
   config-path:
     description: The path to the golangci-lint config yaml file
     required: false
@@ -16,8 +14,3 @@ runs:
   steps:
     - run: ${{ github.action_path }}/golint.sh ${{ inputs.path }} ${{ inputs.output }} ${{ inputs.config-path }}
       shell: bash
-    - name: upload lint results as artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.artifact-name }}
-        path: ${{ inputs.output }}
