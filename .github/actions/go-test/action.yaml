@@ -4,11 +4,7 @@ inputs:
   # Path/s to execute test
   path:
     required: true
-  test-report-artifact-name:
-    required: true
   test-report-path:
-    required: true
-  coverage-report-artifact-name:
     required: true
   coverage-report-path:
     required: true
@@ -19,13 +15,3 @@ runs:
       shell: bash
     - run: go test -coverprofile=${{ inputs.coverage-report-path }} -json -v ./... > ${{ inputs.test-report-path }}
       shell: bash
-    - name: upload test results as artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.test-report-artifact-name }}
-        path: ${{ inputs.test-report-path }}
-    - name: upload test coverage as artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.coverage-report-artifact-name }}
-        path: ${{ inputs.coverage-report-path }}
