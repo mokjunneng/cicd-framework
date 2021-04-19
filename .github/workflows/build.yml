@@ -87,11 +87,16 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/go-build
+      # - uses: ./.github/actions/go-build
+      #   with:
+      #     packages: ./app
+      #     output: build
+      #     artifact-name: build
+      # Use golangci-lint's own Github action instead
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
         with:
-          packages: ./app
-          output: build
-          artifact-name: build
+          version: latest
       - name: Download build
         uses: actions/download-artifact@v1
         with:
