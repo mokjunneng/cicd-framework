@@ -105,7 +105,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
-          args: s3 cp /github/home/build s3://atomicloud-cicd-test/build-${{ github.sha }}
+          args: s3 cp /github/home/build-${{ github.sha }} s3://atomicloud-cicd-test/build-${{ github.sha }}
   goreleaser:
     runs-on: ubuntu-latest
     needs: [lint, test, sonarScan]
