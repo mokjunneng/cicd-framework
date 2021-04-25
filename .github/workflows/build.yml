@@ -97,13 +97,7 @@ jobs:
       - uses: ./.github/actions/go-build
         with:
           packages: ./app
-          output: build
-          artifact-name: build
-      - name: Download build
-        uses: actions/download-artifact@v1
-        with:
-          name: build
-          path: build
+          output: build-${{ github.sha }} # Need to match with next step's with.args
       # Alternative is to setup our container with awscli installed
       - name: Upload build to S3
         uses: docker://amazon/aws-cli:2.0.7
@@ -129,5 +123,6 @@ jobs:
         with:
           version: latest
           args: release --rm-dist
+          workdir: ./app/cli/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

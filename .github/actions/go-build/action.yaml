@@ -4,8 +4,6 @@ inputs:
     required: true
   output:
     required: true
-  artifact-name:
-    required: true
 runs:
   using: "composite"
   steps:
@@ -13,8 +11,3 @@ runs:
         go mod download
         go build -i -o ${{ inputs.output }} ${{ inputs.packages }}
       shell: bash
-    - name: upload build as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.artifact-name }}
-        path: ${{ inputs.output }}
