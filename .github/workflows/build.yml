@@ -13,8 +13,8 @@ jobs:
     steps:
       # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
       # Choose the right linting action for your language
-      - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
       - id: go-lint
         uses: ./.github/actions/go-lint
         with:
@@ -42,8 +42,8 @@ jobs:
     #   options:
     steps:
       # Choose the right testing action for your language
-      - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
       - uses: ./.github/actions/go-test
         with:
           path: ./app/test
@@ -88,8 +88,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint, test, sonarScan]
     steps:
-      - uses: actions/setup-go@v1
       - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
         with:
           fetch-depth: 0
       - uses: ./.github/actions/go-build
