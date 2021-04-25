@@ -14,5 +14,8 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/insta
 # In alpine linux (as it does not come with curl by default)
 # wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.39.0
 
+#### Install Dependencies ####
+go mod download
+
 #### Run ####
 $(go env GOPATH)/bin/golangci-lint run ${COMMA_DELIMITED_PATHS//,/} $( if [ -n "$CONFIG_PATH" ]; then echo "--config $CONFIG_PATH"; fi ) --out-format checkstyle > $OUTPUT_PATH
