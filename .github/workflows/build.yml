@@ -21,6 +21,11 @@ jobs:
           path: ./app...
           output: lint.xml # standardized path to match sonarqube properties
           #config-path:
+      # Use golangci-lint's own Github action instead
+      # - name: golangci-lint
+      #   uses: golangci/golangci-lint-action@v2
+      #   with:
+      #     version: latest
       - name: Upload lint as artifact
         uses: actions/upload-artifact@v2
         with:
@@ -87,16 +92,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      # - uses: ./.github/actions/go-build
-      #   with:
-      #     packages: ./app
-      #     output: build
-      #     artifact-name: build
-      # Use golangci-lint's own Github action instead
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+      - uses: ./.github/actions/go-build
         with:
-          version: latest
+          packages: ./app
+          output: build
+          artifact-name: build
       - name: Download build
         uses: actions/download-artifact@v1
         with:
