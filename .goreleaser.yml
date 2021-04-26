@@ -1,0 +1,80 @@
+# This is an example .goreleaser.yml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod download
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - # Working directory for Go build command(s)
+    id: "cli"
+    dir: ./app/cli
+    # Path to main.go file or main package
+    main: ./app/cli
+    env:
+      - CGO_ENABLED=0
+    # Defaults are darwin, linux
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    # Defaults are 386, amd64 and arm64
+    goarch:
+      - amd64
+      - arm
+      - arm64
+      - 386
+    # Default is 6 (goarm to build when goarch is arm)
+    goarm:
+      - 6
+  - id: "app"
+    dir: ./app
+    main: ./app
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    goarch:
+      - amd64
+      - arm
+      - arm64
+      - 386
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+blobs:
+  # Credentials chain - env variable -> shared credentials file -> IAM role (if running on EC2)
+  provider: s3
+  region: ap-southeast-1
+  bucket: atomicloud-cicd-test
+  # IDs of the artifacts to upload
+  ids:
+    - cli
+    - app
+  folder: "{{ .ProjectName }}/{{ .Tag }}" # Default
+# brews:
+#   -
+# Name template of recipe, defaults to project name
+# name:
+# IDs of archives to use, defaults to all
+# ids:
+

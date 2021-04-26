@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	log.Printf("Hi")
+	log.Print("Hello World.")
+	return
 }
