@@ -18,13 +18,13 @@ builds:
       - linux
       - windows
       - darwin
-      - freebsd
+      # - freebsd
     # Defaults are 386, amd64 and arm64
     goarch:
       - amd64
       - arm
       - arm64
-      - 386
+      # - 386
     # Default is 6 (goarm to build when goarch is arm)
     goarm:
       - 6
@@ -36,12 +36,12 @@ builds:
       - linux
       - windows
       - darwin
-      - freebsd
+      # - freebsd
     goarch:
       - amd64
       - arm
       - arm64
-      - 386
+      # - 386
 archives:
   - replacements:
       darwin: Darwin
