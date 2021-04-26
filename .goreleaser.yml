@@ -62,15 +62,15 @@ changelog:
       - "^docs:"
       - "^test:"
 blobs:
-  # Credentials chain - env variable -> shared credentials file -> IAM role (if running on EC2)
-  provider: s3
-  region: ap-southeast-1
-  bucket: atomicloud-cicd-test
-  # IDs of the artifacts to upload
-  ids:
-    - cli
-    - app
-  folder: "{{ .ProjectName }}/{{ .Tag }}" # Default
+  - # Credentials chain - env variable -> shared credentials file -> IAM role (if running on EC2)
+    provider: s3
+    region: ap-southeast-1
+    bucket: atomicloud-cicd-test
+    # IDs of the artifacts to upload
+    ids:
+      - cli
+      - app
+    folder: "{{ .ProjectName }}/{{ .Tag }}" # Default
 # brews:
 #   -
 # Name template of recipe, defaults to project name
