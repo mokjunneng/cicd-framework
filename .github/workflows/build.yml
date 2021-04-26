@@ -127,7 +127,8 @@ jobs:
         with:
           version: latest
           args: release --rm-dist --config .goreleaser.yml
-          workdir: ./app/cli/
+          workdir: .
+          install-only: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload assets
