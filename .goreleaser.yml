@@ -10,7 +10,7 @@ builds:
   - # Working directory for Go build command(s)
     id: "cli"
     # Path to main.go file or main package
-    main: ./app/cli/main.go
+    main: ./app/cli
     env:
       - CGO_ENABLED=0
     # Defaults are darwin, linux
