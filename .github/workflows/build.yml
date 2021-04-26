@@ -1,7 +1,6 @@
 name: Build
 on: [push, pull_request]
 jobs:
-  # TODO: debug why cant run lint job, runner issue?
   lint:
     runs-on: ubuntu-latest
     # container:
