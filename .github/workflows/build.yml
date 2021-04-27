@@ -112,7 +112,7 @@ jobs:
   #         args: s3 cp /github/workspace/build-${{ github.sha }} s3://atomicloud-cicd-test/build-${{ github.sha }}
   goreleaser:
     runs-on: ubuntu-latest
-    # needs: [lint, test, sonarScan]
+    needs: [lint, test, sonarScan]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -126,7 +126,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
-          args: release --rm-dist --config .goreleaser.yml
+          args: release --rm-dist --config ./app/.goreleaser.yml
           workdir: .
           install-only: false
         env:
