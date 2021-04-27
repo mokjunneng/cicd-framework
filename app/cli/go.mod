@@ -1,4 +1,4 @@
-module git.jetbrains.space/atomicloud/ops/service-account-generator
+module github.com/mokjunneng/cicd-framework
 
 go 1.13
 

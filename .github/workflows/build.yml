@@ -1,95 +1,95 @@
 name: Build
 on: [push, pull_request]
 jobs:
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   # container:
-  #   # image:
-  #   # env:
-  #   # ports:
-  #   # volumes:
-  #   # options:
-  #   steps:
-  #     # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
-  #     # Choose the right linting action for your language
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-go@v2
-  #     - id: go-lint
-  #       uses: ./.github/actions/go-lint
-  #       with:
-  #         path: ./app...
-  #         output: lint.xml # standardized path to match sonarqube properties
-  #         #config-path:
-  #     # Use golangci-lint's own Github action instead
-  #     # - name: golangci-lint
-  #     #   uses: golangci/golangci-lint-action@v2
-  #     #   with:
-  #     #     version: latest
-  #     - name: Upload lint as artifact
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: lint-result
-  #         path: lint.xml
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: lint
-  #   # container:
-  #   #   image:
-  #   #   env:
-  #   #   ports:
-  #   #   volumes:
-  #   #   options:
-  #   steps:
-  #     # Choose the right testing action for your language
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-go@v2
-  #     - uses: ./.github/actions/go-test
-  #       with:
-  #         path: ./app/test
-  #         test-report-path: tests.out # standardized path to match sonarqube properties
-  #         coverage-report-path: coverage.out # standardized path to match sonarqube properties
-  #     - name: Upload test results as artifacts
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: test-report
-  #         path: tests.out
-  #     - name: Upload test coverage as artifacts
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: coverage-report
-  #         path: coverage.out
-  # sonarScan:
-  #   runs-on: ubuntu-latest
-  #   needs: [lint, test]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-  #     # - uses: docker://sonarsource/sonar-scanner-cli:latest
-  #     #   env:
-  #     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #     #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  #     - name: Download lint results
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: lint-result
-  #         path: lint-result
-  #     - name: Download test results
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: test-report
-  #         path: test-report
-  #     - name: Download code coverage results
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: coverage-report
-  #         path: coverage
-  #     - name: Analyze with SonarCloud
-  #       uses: SonarSource/sonarcloud-github-action@master
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  lint:
+    runs-on: ubuntu-latest
+    # container:
+    # image:
+    # env:
+    # ports:
+    # volumes:
+    # options:
+    steps:
+      # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
+      # Choose the right linting action for your language
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - id: go-lint
+        uses: ./.github/actions/go-lint
+        with:
+          path: ./app...
+          output: lint.xml # standardized path to match sonarqube properties
+          #config-path:
+      # Use golangci-lint's own Github action instead
+      # - name: golangci-lint
+      #   uses: golangci/golangci-lint-action@v2
+      #   with:
+      #     version: latest
+      - name: Upload lint as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lint-result
+          path: lint.xml
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    # container:
+    #   image:
+    #   env:
+    #   ports:
+    #   volumes:
+    #   options:
+    steps:
+      # Choose the right testing action for your language
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - uses: ./.github/actions/go-test
+        with:
+          path: ./app/test
+          test-report-path: tests.out # standardized path to match sonarqube properties
+          coverage-report-path: coverage.out # standardized path to match sonarqube properties
+      - name: Upload test results as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: tests.out
+      - name: Upload test coverage as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage.out
+  sonarScan:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      # - uses: docker://sonarsource/sonar-scanner-cli:latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Download lint results
+        uses: actions/download-artifact@v1
+        with:
+          name: lint-result
+          path: lint-result
+      - name: Download test results
+        uses: actions/download-artifact@v1
+        with:
+          name: test-report
+          path: test-report
+      - name: Download code coverage results
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage-report
+          path: coverage
+      - name: Analyze with SonarCloud
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   # build:
   #   runs-on: ubuntu-latest
   #   needs: [lint, test, sonarScan]

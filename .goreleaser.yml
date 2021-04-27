@@ -9,6 +9,7 @@ before:
 builds:
   - # Working directory for Go build command(s)
     id: "cli"
+    binary: "cli"
     # Path to main.go file or main package
     main: ./app/cli
     env:
@@ -29,6 +30,7 @@ builds:
     goarm:
       - 6
   - id: "app"
+    binary: "app"
     main: ./app/main.go
     env:
       - CGO_ENABLED=0
