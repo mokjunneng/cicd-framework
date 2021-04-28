@@ -45,7 +45,21 @@ builds:
       - arm64
       - 386
 archives:
-  - replacements:
+  - builds:
+      - cli
+    id: cli
+    format: binary
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+  - builds:
+      - app
+    id: app
+    format: binary
+    replacements:
       darwin: Darwin
       linux: Linux
       windows: Windows
@@ -71,10 +85,12 @@ blobs:
       - cli
       - app
     folder: "{{ .ProjectName }}/{{ .Tag }}" # Default
-# brews:
-#   -
-# Name template of recipe, defaults to project name
-# name:
-# IDs of archives to use, defaults to all
-# ids:
-
+release:
+  ids:
+    - cli
+    - app
+  draft: true
+  prerelease: auto
+  name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
+# TODO: brew, snapcraft, snoop configs
+# TODO: Sign artifact and upload to ubuntu ppa

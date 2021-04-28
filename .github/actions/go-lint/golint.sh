@@ -18,4 +18,4 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/insta
 go mod download
 
 #### Run ####
-$(go env GOPATH)/bin/golangci-lint run ${COMMA_DELIMITED_PATHS//,/} $( if [ -n "$CONFIG_PATH" ]; then echo "--config $CONFIG_PATH"; fi ) --out-format checkstyle > $OUTPUT_PATH || true
+$(go env GOPATH)/bin/golangci-lint run ${COMMA_DELIMITED_PATHS//,/} $( if [ -n "$CONFIG_PATH" ]; then echo "--config $CONFIG_PATH"; fi ) --timeout 5 --out-format checkstyle > $OUTPUT_PATH || true
