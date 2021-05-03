@@ -129,7 +129,7 @@ jobs:
       #     gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
       #     passphrase: ${{ secrets.PASSPHRASE }}
       - name: Build and release with goreleaser
-        uses: ./.github/actions/go-lint
+        uses: ./.github/actions/goreleaser
         with:
           args: release --rm-dist --config ./app/.goreleaser.yml
         env:
