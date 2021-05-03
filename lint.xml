@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<checkstyle version="5.0">
+  <file name="app/cli/create.go">
+    <error column="6" line="5" message="`create` is unused" severity="error" source="deadcode">
+    </error>
+  </file>
+  <file name="app/cli/registry.go">
+    <error column="6" line="7" message="`PullFromRegistry` is unused" severity="error" source="deadcode">
+    </error>
+    <error column="12" line="11" message="Error return value of `client.Run` is not checked" severity="error" source="errcheck">
+    </error>
+  </file>
+  <file name="app/cli/util.go">
+    <error column="2" line="43" message="S1017: should replace this if statement with an unconditional strings.Replace" severity="error" source="gosimple">
+    </error>
+  </file>
+  <file name="app/cli/list.go">
+    <error column="10" line="38" message="SA4010: this result of append is never used, except maybe in other appends" severity="error" source="staticcheck">
+    </error>
+  </file>
+</checkstyle>

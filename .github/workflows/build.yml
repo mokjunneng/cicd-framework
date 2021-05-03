@@ -128,13 +128,20 @@ jobs:
       #   with:
       #     gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
       #     passphrase: ${{ secrets.PASSPHRASE }}
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+      - name: Build and release with goreleaser
+        uses: ./.github/actions/go-lint
         with:
-          version: latest
-          args: release --rm-dist --skip-publish=false --config ./app/.goreleaser.yml
-          workdir: .
-          install-only: false
+          args: release --rm-dist --config ./app/.goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+      # - name: Run GoReleaser
+      #   uses: goreleaser/goreleaser-action@v2
+      #   with:
+      #     version: latest
+      #     args: release --rm-dist --skip-publish=false --config ./app/.goreleaser.yml
+      #     workdir: .
+      #     install-only: false
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     # GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}

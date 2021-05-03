@@ -1,0 +1,13 @@
+name: "goreleaser"
+description: "Build and release for GO"
+inputs:
+  args:
+    required: true
+  workdir:
+    default: "."
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/gorelease.sh ${{ inputs.args }} ${{ inputs.workdir }}
+      shell: bash
