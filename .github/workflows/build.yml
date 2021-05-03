@@ -131,7 +131,7 @@ jobs:
       - name: Build and release with goreleaser
         uses: ./.github/actions/goreleaser
         with:
-          args: release --rm-dist --config ./app/.goreleaser.yml
+          args: "release --rm-dist --config ./app/.goreleaser.yml"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
