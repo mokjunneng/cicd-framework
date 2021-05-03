@@ -17,7 +17,7 @@ jobs:
       - id: go-lint
         uses: ./.github/actions/go-lint
         with:
-          path: ./app...
+          paths: ./app...
           output: lint.xml # standardized path to match sonarqube properties
           #config-path:
       # Use golangci-lint's own Github action instead

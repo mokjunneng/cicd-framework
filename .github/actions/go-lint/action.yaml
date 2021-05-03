@@ -1,8 +1,8 @@
 name: "go lint"
 description: "linting for GO"
 inputs:
-  # Path/s to execute lint
-  path:
+  # Path/s (comma-delimited) to execute lint
+  paths:
     required: true
   output:
     required: true
@@ -12,5 +12,5 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/golint.sh ${{ inputs.path }} ${{ inputs.output }} ${{ inputs.config-path }}
+    - run: ${{ github.action_path }}/golint.sh ${{ inputs.paths }} ${{ inputs.output }} ${{ inputs.config-path }}
       shell: bash
