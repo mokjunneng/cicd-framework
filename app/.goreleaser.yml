@@ -92,5 +92,10 @@ release:
   draft: true
   prerelease: auto
   name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
+signs:
+  - artifacts: all
+    ids:
+      - cli
+      - app
 # TODO: brew, snapcraft, snoop configs
 # TODO: Sign artifact and upload to ubuntu ppa
