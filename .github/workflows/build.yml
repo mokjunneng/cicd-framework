@@ -90,26 +90,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  # build:
-  #   runs-on: ubuntu-latest
-  #   needs: [lint, test, sonarScan]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-go@v2
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: ./.github/actions/go-build
-  #       with:
-  #         packages: ./app
-  #         output: build-${{ github.sha }} # Need to match with next step's with.args
-  #     # Alternative is to setup our container with awscli installed
-  #     - name: Upload build to S3
-  #       uses: docker://amazon/aws-cli:2.0.7
-  #       env:
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       with:
-  #         args: s3 cp /github/workspace/build-${{ github.sha }} s3://atomicloud-cicd-test/build-${{ github.sha }}
   goreleaser:
     runs-on: ubuntu-latest
     needs: [lint, test, sonarScan]
@@ -127,6 +107,7 @@ jobs:
         uses: crazy-max/ghaction-import-gpg@v3
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name: Build and release with goreleaser
         uses: ./.github/actions/goreleaser
         with:
@@ -136,26 +117,31 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-      # - name: Run GoReleaser
-      #   uses: goreleaser/goreleaser-action@v2
-      #   with:
-      #     version: latest
-      #     args: release --rm-dist --skip-publish=false --config ./app/.goreleaser.yml
-      #     workdir: .
-      #     install-only: false
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     # GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-  # publishToUbuntuPpa:
-  #   runs-on: ubuntu-latest
-  #   needs: goreleaser
-  #   steps:
-  #     - name: Download signed builds
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name:
-  #         path:
-  #     - name: Publish builds to Ubuntu PPA
-  #       uses: ./.github/actions/ubuntu-publish
-  #       with:
-  #         path:
+  publishToUbuntuPpa:
+    runs-on: ubuntu-latest
+    needs: goreleaser
+    steps:
+      - name: Download builds
+        uses: actions/download-artifact@v1
+        with:
+          name: app
+          path: app # build folder
+      - name: Get the package name
+        id: get_package_name
+        run: echo ::set-output name=PACKAGE_NAME::${GITHUB_REPOSITORY#*/}_v${GITHUB_REF/refs\/tags\//}
+      - name: Publish builds to Ubuntu PPA
+        uses: ./.github/actions/ubuntu-publish
+        with:
+          build-folder: ${{ steps.get_package_name.outputs.PACKAGE_NAME }}
+          artifact-path: app
+          package-name: ${{ steps.get_package_name.outputs.PACKAGE_NAME }}
+          email: principals@atomi.cloud # should this be our own email?
+          author: ${{ github.repository_owner }}
+          section: util
+          ci-project-url: https://github.com/${{github.repository}}
+          ci-repository-url: https://github.com/${{github.repository}}.git
+          target-ppa: mokjn/atomicloud
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+          GPG_OWNERTRUST: ${{ secrets.GPGP_OWNERTRUST }}

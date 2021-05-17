@@ -1,0 +1,48 @@
+name: "ubuntu-publish"
+description: "Publish binary packages to Ubuntu PPA"
+inputs:
+  build-folder:
+    required: true
+  artifact-path:
+    required: true
+  package-name:
+    required: true
+  email:
+    required: true
+  author:
+    required: true
+  section:
+    required: true
+  ci-project-url:
+    required: true
+  ci-repository-url:
+    required: true
+  target-ppa:
+    required: true
+  short-description:
+    required: false
+    default: ""
+  long-description:
+    required: false
+    default: ""
+  copyright:
+    required: false
+    default: "mit"
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        ${{ github.action_path }}/ubuntu-publish.sh
+          --build_folder=${{ inputs.build-folder }}
+          --artifact_path=${{ inputs.artifact-path }}
+          --package_name=${{ inputs.package-name }}
+          --email=${{ inputs.email }}
+          --author=${{ inputs.author }}
+          --copyright=${{ inputs.copyright }}
+          --section=${{ inputs.section }}
+          --ci_project_url=${{ inputs.ci-project-url }}
+          --ci_repository_url=${{ inputs.ci-repository-url }}
+          --target_ppa=${{ inputs.target-ppa }}
+          --short_description=${{ inputs.short-description }}
+          --long_description=${{ inputs.long-description }}
+      shell: bash
