@@ -48,7 +48,9 @@ archives:
   - builds:
       - cli
     id: cli
-    format: binary
+    format: gz
+    files:
+      - none*
     replacements:
       darwin: Darwin
       linux: Linux
@@ -58,6 +60,9 @@ archives:
   - builds:
       - app
     id: app
+    format: gz
+    files:
+      - none*
     format: binary
     replacements:
       darwin: Darwin
