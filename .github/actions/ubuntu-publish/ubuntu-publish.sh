@@ -32,6 +32,7 @@ case $i in
     --section=*)
     SECTION="${i#*=}"
     shift # past argument=value
+    ;;
     --ci_project_url=*)
     CI_PROJECT_URL="${i#*=}"
     shift # past argument=value
