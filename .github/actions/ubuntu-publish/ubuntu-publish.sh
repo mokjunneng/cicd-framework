@@ -62,6 +62,7 @@ done
 mkdir -p ${BUILD_FOLDER}
 cp ${ARTIFACT_PATH}/*Linux* ${BUILD_FOLDER}/
 cd ${BUILD_FOLDER}
+gunzip *.gz
 
 # import gpg
 gpg || true

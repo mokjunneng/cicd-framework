@@ -41,7 +41,7 @@ builds:
       - 386
 archives:
   - builds:
-      - cli
+      # - cli
       - app
     id: gorelease-archive
     format: gz
