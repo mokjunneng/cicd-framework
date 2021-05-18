@@ -13,12 +13,12 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
+      # - darwin
       # - freebsd
     # Defaults are 386, amd64 and arm64
     goarch:
       - amd64
-      # - arm
+      - arm
       - arm64
       - 386
     # Default is 6 (goarm to build when goarch is arm)
@@ -32,7 +32,7 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
+      # - darwin
       # - freebsd
     goarch:
       - amd64
