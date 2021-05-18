@@ -1,11 +1,6 @@
-# This is an example .goreleaser.yml file with some sane defaults.
-# Make sure to check the documentation at http://goreleaser.com
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod download
-#     # you may remove this if you don't need go generate
-#     - go generate ./...
 builds:
   - # Working directory for Go build command(s)
     id: "cli"
@@ -47,19 +42,8 @@ builds:
 archives:
   - builds:
       - cli
-    id: cli
-    format: gz
-    files:
-      - none*
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
-  - builds:
       - app
-    id: app
+    id: gorelease-archive
     format: gz
     files:
       - none*
@@ -97,9 +81,6 @@ release:
   prerelease: auto
   name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
 signs:
-  - artifacts: all
-    ids:
-      - cli
-      - app
+  - artifacts: checksum
 # TODO: brew, snapcraft, snoop configs
 # TODO: Sign artifact and upload to ubuntu ppa

@@ -104,7 +104,7 @@ jobs:
       - name: Download builds
         uses: actions/download-artifact@v1
         with:
-          name: app
+          name: gorelease-archive
           path: app # build folder
       - name: Get the package name
         id: get_package_name
