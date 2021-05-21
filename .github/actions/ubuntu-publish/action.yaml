@@ -32,17 +32,17 @@ runs:
   using: "composite"
   steps:
     - run: |
-        ${{ github.action_path }}/ubuntu-publish.sh
-          --build_folder=${{ inputs.build-folder }}
-          --artifact_path=${{ inputs.artifact-path }}
-          --package_name=${{ inputs.package-name }}
-          --email=${{ inputs.email }}
-          --author=${{ inputs.author }}
-          --copyright=${{ inputs.copyright }}
-          --section=${{ inputs.section }}
-          --ci_project_url=${{ inputs.ci-project-url }}
-          --ci_repository_url=${{ inputs.ci-repository-url }}
-          --target_ppa=${{ inputs.target-ppa }}
-          --short_description=${{ inputs.short-description }}
+        ${{ github.action_path }}/ubuntu-publish.sh \
+          --build_folder=${{ inputs.build-folder }} \
+          --artifact_path=${{ inputs.artifact-path }} \
+          --package_name=${{ inputs.package-name }} \
+          --email=${{ inputs.email }} \
+          --author=${{ inputs.author }} \
+          --copyright=${{ inputs.copyright }} \
+          --section=${{ inputs.section }} \
+          --ci_project_url=${{ inputs.ci-project-url }} \
+          --ci_repository_url=${{ inputs.ci-repository-url }} \
+          --target_ppa=${{ inputs.target-ppa }} \
+          --short_description=${{ inputs.short-description }} \
           --long_description=${{ inputs.long-description }}
       shell: bash

@@ -1,63 +1,74 @@
 #!/bin/bash
 
 # TODO: Enhance CLI arguments parsing, include help method
-for i in "$@"
-do
-
-case $i in
-    --build_folder=*)
-    BUILD_FOLDER="${i#*=}"
-    shift # past argument=value
-    ;;
-    --artifact_path=*)
-    ARTIFACT_PATH="${i#*=}"
-    shift # past argument=value
-    ;;
-    --package_name=*)
-    PACKAGE_NAME="${i#*=}"
-    shift # past argument=value
-    ;;
-    --copyright=*)
-    COPYRIGHT="${i#*=}"
-    shift # past argument=value
-    ;;
-    --email=*)
-    EMAIL="${i#*=}"
-    shift # past argument=value
-    ;;
-    --author=*)
-    AUTHOR="${i#*=}"
-    shift # past argument=value
-    ;;
-    --section=*)
-    SECTION="${i#*=}"
-    shift # past argument=value
-    ;;
-    --ci_project_url=*)
-    CI_PROJECT_URL="${i#*=}"
-    shift # past argument=value
-    ;;
-    --ci_repository_url=*)
-    CI_REPOSITORY_URL="${i#*=}"
-    shift # past argument=value
-    ;;
-    --short_description=*)
-    SHORT_DESCRIPTION="${i#*=}"
-    shift # past argument=value
-    ;;
-    --long_description=*)
-    LONG_DESCRIPTION="${i#*=}"
-    shift # past argument=value
-    ;;
-    --target_ppa=*)
-    TARGET_PPA="${i#*=}"
-    shift # past argument=value
-    ;;
-    *)
-          # unknown option
-    ;;
-esac
+for i in "$@"; do
+    case $i in
+        --build_folder=*)
+        BUILD_FOLDER="${i#*=}"
+        shift # past argument=value
+        ;;
+        --artifact_path=*)
+        ARTIFACT_PATH="${i#*=}"
+        shift # past argument=value
+        ;;
+        --package_name=*)
+        PACKAGE_NAME="${i#*=}"
+        shift # past argument=value
+        ;;
+        --copyright=*)
+        COPYRIGHT="${i#*=}"
+        shift # past argument=value
+        ;;
+        --email=*)
+        EMAIL="${i#*=}"
+        shift # past argument=value
+        ;;
+        --author=*)
+        AUTHOR="${i#*=}"
+        shift # past argument=value
+        ;;
+        --section=*)
+        SECTION="${i#*=}"
+        shift # past argument=value
+        ;;
+        --ci_project_url=*)
+        CI_PROJECT_URL="${i#*=}"
+        shift # past argument=value
+        ;;
+        --ci_repository_url=*)
+        CI_REPOSITORY_URL="${i#*=}"
+        shift # past argument=value
+        ;;
+        --short_description=*)
+        SHORT_DESCRIPTION="${i#*=}"
+        shift # past argument=value
+        ;;
+        --long_description=*)
+        LONG_DESCRIPTION="${i#*=}"
+        shift # past argument=value
+        ;;
+        --target_ppa=*)
+        TARGET_PPA="${i#*=}"
+        shift # past argument=value
+        ;;
+        *)
+            # unknown option
+        ;;
+    esac
 done
+
+echo $BUILD_FOLDER
+echo $ARTIFACT_PATH
+echo $PACKAGE_NAME
+echo $EMAIL
+echo $AUTHOR
+echo $COPYRIGHT
+echo $SECTION
+echo $CI_PROJECT_URL
+echo $CI_REPOSITORY_URL
+echo $TARGET_PPA
+echo $SHORT_DESCRIPTION
+echo $LONG_DESCRIPTION
 
 # Copy all Linux binaries to new folder
 mkdir -p ${BUILD_FOLDER}
