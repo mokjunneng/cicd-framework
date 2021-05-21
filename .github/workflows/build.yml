@@ -117,7 +117,7 @@ jobs:
           path: app # build folder
       - name: Get the package name
         id: get_package_name
-        run: echo ::set-output name=PACKAGE_NAME::${GITHUB_REPOSITORY#*/}_v${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=PACKAGE_NAME::${GITHUB_REPOSITORY#*/}-${GITHUB_REF/refs\/tags\//}
       - name: Publish builds to Ubuntu PPA
         uses: ./.github/actions/ubuntu-publish
         with:

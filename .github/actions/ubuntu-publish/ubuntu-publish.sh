@@ -57,17 +57,21 @@ for i in "$@"; do
     esac
 done
 
+echo ${GPG_PRIVATE_KEY} > private.key
+echo ${GPG_PUBLIC_KEY} > public.key
+echo ${GPG_OWNERTRUS} > ownertrust.txt
+cat private.key
+cat public.key
+cat ownertrust.txt
+
 # Install required tools
 sudo apt install gnupg dput dh-make devscripts lintian
 
 # import gpg
 gpg || true
-echo ${GPG_PRIVATE_KEY}
-echo ${GPG_PUBLIC_KEY}
-echo ${GPG_OWNERTRUS}
-echo ${GPG_PRIVATE_KEY} > private.key
-echo ${GPG_PUBLIC_KEY} > public.key
-echo ${GPG_OWNERTRUS} > ownertrust.txt
+# echo ${GPG_PRIVATE_KEY} > private.key
+# echo ${GPG_PUBLIC_KEY} > public.key
+# echo ${GPG_OWNERTRUS} > ownertrust.txt
 gpg --import private.key
 gpg --import public.key
 gpg --import-ownertrust ownertrust.txt
@@ -77,6 +81,7 @@ mkdir -p ${BUILD_FOLDER}
 cp ${ARTIFACT_PATH}/*Linux* ${BUILD_FOLDER}/
 cd ${BUILD_FOLDER}
 gunzip *.gz
+ls
 
 # dh make
 dh_make -p ${PACKAGE_NAME} --single --native --copyright ${COPYRIGHT} --email ${EMAIL}
