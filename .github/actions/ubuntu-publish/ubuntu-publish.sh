@@ -57,33 +57,26 @@ for i in "$@"; do
     esac
 done
 
-echo $BUILD_FOLDER
-echo $ARTIFACT_PATH
-echo $PACKAGE_NAME
-echo $EMAIL
-echo $AUTHOR
-echo $COPYRIGHT
-echo $SECTION
-echo $CI_PROJECT_URL
-echo $CI_REPOSITORY_URL
-echo $TARGET_PPA
-echo $SHORT_DESCRIPTION
-echo $LONG_DESCRIPTION
+# Install required tools
+sudo apt install gnupg dput dh-make devscripts lintian
+
+# import gpg
+gpg || true
+echo ${GPG_PRIVATE_KEY}
+echo ${GPG_PUBLIC_KEY}
+echo ${GPG_OWNERTRUS}
+echo ${GPG_PRIVATE_KEY} > private.key
+echo ${GPG_PUBLIC_KEY} > public.key
+echo ${GPG_OWNERTRUS} > ownertrust.txt
+gpg --import private.key
+gpg --import public.key
+gpg --import-ownertrust ownertrust.txt
 
 # Copy all Linux binaries to new folder
 mkdir -p ${BUILD_FOLDER}
 cp ${ARTIFACT_PATH}/*Linux* ${BUILD_FOLDER}/
 cd ${BUILD_FOLDER}
 gunzip *.gz
-
-# import gpg
-gpg || true
-gpg --import ${GPG_PRIVATE_KEY}
-gpg --import ${GPG_PUBLIC_KEY}
-gpg --import-ownertrust ${GPG_OWNERTRUST}
-
-# Install required tools
-apt install gnupg dput dh-make devscripts lintian
 
 # dh make
 dh_make -p ${PACKAGE_NAME} --single --native --copyright ${COPYRIGHT} --email ${EMAIL}
