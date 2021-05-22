@@ -59,27 +59,23 @@ done
 
 echo $PACKAGE_NAME
 
-echo ${GPG_PRIVATE_KEY} > private.key
-echo ${GPG_PUBLIC_KEY} > public.key
-echo ${GPG_OWNERTRUST} > ownertrust.txt
-
 # Install required tools
-sudo apt install gnupg dput dh-make devscripts lintian
+sudo apt update -y
+sudo apt install gnupg dput dh-make devscripts lintian -y
 
 # import gpg
 gpg --recv-keys --keyserver keyserver.ubuntu.com ${GPG_KEYID}
-gpg --batch --import private.key
-gpg --batch --import-ownertrust ownertrust.txt
+echo -e "$GPG_PRIVATE_KEY" | gpg --batch --import
+echo -e "$GPG_OWNERTRUST" gpg --batch --import-ownertrust
 
 # Copy all Linux binaries to new folder
 mkdir -p ${BUILD_FOLDER}
 cp ${ARTIFACT_PATH}/*Linux* ${BUILD_FOLDER}/
 cd ${BUILD_FOLDER}
 gunzip *.gz
-ls
 
 # dh make
-dh_make -p ${PACKAGE_NAME} --single --native --copyright ${COPYRIGHT} --email ${EMAIL} -y
+env DEBEMAIL=${EMAIL} DEBFULLNAME=${AUTHOR} dh_make -p ${PACKAGE_NAME} --single --native --copyright ${COPYRIGHT} --email ${EMAIL} -y
 rm debian/*.ex debian/*.EX # these files are not needed
 
 # update control and changelog
@@ -92,9 +88,11 @@ perl -i -pe 's/^(Description:).*/$1 ${SHORT_DESCRIPTION}/' debian/control
 perl -i -pe $'s/^ <insert long description.*/ ${LONG_DESCRIPTION}/' debian/control
 perl -i -pe 's/^(Standards-Version:) 3.9.6/$1 3.9.7/' debian/control
 perl -i -0777 -pe "s/(Copyright: ).+\n +.+/\${1}$(date +%Y) ${AUTHOR} ${EMAIL}/" debian/copyright
+ls
 
 # Build the package
-debuild -S | tee /tmp/debuild.log 2>&1
+debuild -S -k${GPG_KEYID}
+ls
 
 # Upload the package
-dput ppa:${TARGET_PPA} "$(perl -ne 'print $1 if /dpkg-genchanges -S >(.*)/' /tmp/debuild.log)"  	# uses log file from previous section
+dput ppa:${TARGET_PPA} $(ls | grep *.changes)

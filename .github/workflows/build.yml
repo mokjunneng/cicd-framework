@@ -122,7 +122,7 @@ jobs:
         uses: ./.github/actions/ubuntu-publish
         with:
           build-folder: ${{ steps.get_package_name.outputs.PACKAGE_NAME }}
-          artifact-path: app
+          artifact-path: app # build artifacts should be gzipped
           package-name: ${{ steps.get_package_name.outputs.PACKAGE_NAME }}
           email: principals@atomi.cloud # should this be our own email?
           author: ${{ github.repository_owner }}
