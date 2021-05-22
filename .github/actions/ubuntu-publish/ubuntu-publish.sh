@@ -59,7 +59,6 @@ done
 
 echo ${GPG_PRIVATE_KEY} > private.key
 echo ${GPG_PUBLIC_KEY} > public.key
-echo ${GPG_OWNERTRUS} > ownertrust.txt
 cat private.key
 cat public.key
 cat ownertrust.txt
@@ -69,12 +68,9 @@ sudo apt install gnupg dput dh-make devscripts lintian
 
 # import gpg
 gpg || true
-# echo ${GPG_PRIVATE_KEY} > private.key
-# echo ${GPG_PUBLIC_KEY} > public.key
-# echo ${GPG_OWNERTRUS} > ownertrust.txt
-gpg --import private.key
-gpg --import public.key
-gpg --import-ownertrust ownertrust.txt
+gpg --batch --import public.key
+gpg --batch --import private.key
+gpg --batch --import-ownertrust ${GPG_OWNERTRUST}
 
 # Copy all Linux binaries to new folder
 mkdir -p ${BUILD_FOLDER}
@@ -93,7 +89,7 @@ perl -i -pe 's/^(Section:).*/$1 ${SECTION}/' debian/control
 perl -i -pe 's/^(Homepage:).*/$1 ${CI_PROJECT_URL}/' debian/control
 perl -i -pe 's/^#(Vcs-Browser:).*/$1 ${CI_PROJECT_URL}/' debian/control
 perl -i -pe 's/^#(Vcs-Git:).*/$1 ${CI_REPOSITORY_URL}/' debian/control
-perl -i -pe 's/^(Description:).*/$1 ${SHORT_DESCRIPTION}/'
+perl -i -pe 's/^(Description:).*/$1 ${SHORT_DESCRIPTION}/' debian/control
 perl -i -pe $'s/^ <insert long description.*/ ${LONG_DESCRIPTION}/' debian/control
 perl -i -pe 's/^(Standards-Version:) 3.9.6/$1 3.9.7/' debian/control
 perl -i -0777 -pe "s/(Copyright: ).+\n +.+/\${1}$(date +%Y) ${AUTHOR} ${EMAIL}/" debian/copyright
