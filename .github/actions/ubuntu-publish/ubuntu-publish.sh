@@ -88,12 +88,12 @@ perl -i -pe 's/^(Description:).*/$1 ${SHORT_DESCRIPTION}/' debian/control
 perl -i -pe $'s/^ <insert long description.*/ ${LONG_DESCRIPTION}/' debian/control
 perl -i -pe 's/^(Standards-Version:) 3.9.6/$1 3.9.7/' debian/control
 perl -i -0777 -pe "s/(Copyright: ).+\n +.+/\${1}$(date +%Y) ${AUTHOR} ${EMAIL}/" debian/copyright
-ls
 
 # Build the package
 export GPG_TTY=$(tty)
 debuild -S -k${GPG_KEYID}
-ls
 
 # Upload the package
+cd ..
+ls
 dput ppa:${TARGET_PPA} $(ls | grep *.changes)
