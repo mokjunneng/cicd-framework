@@ -57,17 +57,16 @@ for i in "$@"; do
     esac
 done
 
+echo $PACKAGE_NAME
+
 echo ${GPG_PRIVATE_KEY} > private.key
 echo ${GPG_PUBLIC_KEY} > public.key
-cat private.key
-cat public.key
-cat ownertrust.txt
 
 # Install required tools
 sudo apt install gnupg dput dh-make devscripts lintian
 
 # import gpg
-gpg || true
+gpg --recv-keys --keyserver keyserver.ubuntu.com ${GPG_KEYID}
 gpg --batch --import public.key
 gpg --batch --import private.key
 gpg --batch --import-ownertrust ${GPG_OWNERTRUST}
