@@ -61,15 +61,15 @@ echo $PACKAGE_NAME
 
 echo ${GPG_PRIVATE_KEY} > private.key
 echo ${GPG_PUBLIC_KEY} > public.key
+echo ${GPG_OWNERTRUST} > ownertrust.txt
 
 # Install required tools
 sudo apt install gnupg dput dh-make devscripts lintian
 
 # import gpg
 gpg --recv-keys --keyserver keyserver.ubuntu.com ${GPG_KEYID}
-gpg --batch --import public.key
 gpg --batch --import private.key
-gpg --batch --import-ownertrust ${GPG_OWNERTRUST}
+gpg --batch --import-ownertrust ownertrust.txt
 
 # Copy all Linux binaries to new folder
 mkdir -p ${BUILD_FOLDER}
@@ -79,7 +79,7 @@ gunzip *.gz
 ls
 
 # dh make
-dh_make -p ${PACKAGE_NAME} --single --native --copyright ${COPYRIGHT} --email ${EMAIL}
+dh_make -p ${PACKAGE_NAME} --single --native --copyright ${COPYRIGHT} --email ${EMAIL} -y
 rm debian/*.ex debian/*.EX # these files are not needed
 
 # update control and changelog
