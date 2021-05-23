@@ -91,9 +91,11 @@ perl -i -0777 -pe "s/(Copyright: ).+\n +.+/\${1}$(date +%Y) ${AUTHOR} ${EMAIL}/"
 
 # Build the package
 export GPG_TTY=$(tty)
-sudo debuild -S
+env DEBUILD_DPKG_BUILDPACKAGE_OPTS="-k'${GPG_KEYID}'"
+debuild -S
 
 # Upload the package
 cd ..
 ls
+cat *.changes
 dput ppa:${TARGET_PPA} $(ls | grep *.changes)
