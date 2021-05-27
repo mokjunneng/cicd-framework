@@ -90,11 +90,11 @@ nfpms:
       - deb
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 publishers:
-  name: fury.io
-  ids:
-    - debian_packages
-  dir: "{{ dir .ArtifactPath }}"
-  cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/mokjunneng/
+  - name: fury.io
+    ids:
+      - debian_packages
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/mokjunneng/
 # signs:
 #   - artifacts: checksum
 # TODO: brew, snapcraft, snoop configs
