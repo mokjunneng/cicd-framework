@@ -77,7 +77,13 @@ release:
   ids:
     - cli
     - app
+  # If set to true, will not auto-publish the release.
+  # Default is false.
   draft: true
+  # If set to auto, will mark the release as not ready for production
+  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
+  # If set to true, will mark the release as not ready for production.
+  # Default is false.
   prerelease: auto
   name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
 # create deb packages
@@ -95,6 +101,18 @@ publishers:
       - debian_packages
     dir: "{{ dir .ArtifactPath }}"
     cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/mokjunneng/
+# snapcrafts:
+#   id: snapcraft_packages
+#   builds:
+#     - cli
+#     - app
+#   replacements:
+#     amd64: 64-bit
+#     386: 32-bit
+#     darwin: macOS
+#     linux: Tux
+#   publish: true
+
 # signs:
 #   - artifacts: checksum
 # TODO: brew, snapcraft, snoop configs

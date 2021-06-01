@@ -3,73 +3,73 @@
 name: Build
 on: [push, pull_request]
 jobs:
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
-  #     # Choose the right linting action for your language
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-go@v2
-  #     - id: go-lint
-  #       uses: ./.github/actions/go-lint
-  #       with:
-  #         paths: ./app...
-  #         output: lint.xml # standardized path to match sonarqube properties
-  #         #config-path:
-  #     - name: Upload lint as artifact
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: lint-result
-  #         path: lint.xml
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: lint
-  #   steps:
-  #     # Choose the right testing action for your language
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-go@v2
-  #     - uses: ./.github/actions/go-test
-  #       with:
-  #         path: ./app/test
-  #         test-report-path: tests.out # standardized path to match sonarqube properties
-  #         coverage-report-path: coverage.out # standardized path to match sonarqube properties
-  #     - name: Upload test results as artifacts
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: test-report
-  #         path: tests.out
-  #     - name: Upload test coverage as artifacts
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: coverage-report
-  #         path: coverage.out
-  # sonarScan:
-  #   runs-on: ubuntu-latest
-  #   needs: [lint, test]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-  #     - name: Download lint results
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: lint-result
-  #         path: lint-result
-  #     - name: Download test results
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: test-report
-  #         path: test-report
-  #     - name: Download code coverage results
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: coverage-report
-  #         path: coverage
-  #     - name: Analyze with SonarCloud
-  #       uses: SonarSource/sonarcloud-github-action@master
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      # local path: ./.github/actions/my-action, public action: {owner}/{repo}/{path}@{ref}
+      # Choose the right linting action for your language
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - id: go-lint
+        uses: ./.github/actions/go-lint
+        with:
+          paths: ./app...
+          output: lint.xml # standardized path to match sonarqube properties
+          #config-path:
+      - name: Upload lint as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lint-result
+          path: lint.xml
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      # Choose the right testing action for your language
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - uses: ./.github/actions/go-test
+        with:
+          path: ./app/test
+          test-report-path: tests.out # standardized path to match sonarqube properties
+          coverage-report-path: coverage.out # standardized path to match sonarqube properties
+      - name: Upload test results as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: tests.out
+      - name: Upload test coverage as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage.out
+  sonarScan:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download lint results
+        uses: actions/download-artifact@v1
+        with:
+          name: lint-result
+          path: lint-result
+      - name: Download test results
+        uses: actions/download-artifact@v1
+        with:
+          name: test-report
+          path: test-report
+      - name: Download code coverage results
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage-report
+          path: coverage
+      - name: Analyze with SonarCloud
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   goreleaser:
     runs-on: ubuntu-latest
     # needs: [lint, test, sonarScan]
@@ -103,36 +103,3 @@ jobs:
         with:
           name: builds
           path: dist # default archive folder created by goreleaser
-  # publishToUbuntuPpa:
-  #   runs-on: ubuntu-latest
-  #   needs: goreleaser
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Download builds
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: builds
-  #         path: app # build folder
-  #     - name: Get the package name
-  #       id: get_package_name
-  #       run: echo ::set-output name=PACKAGE_NAME::${GITHUB_REPOSITORY#*/}-${GITHUB_REF/refs\/tags\/v/}
-  #     - name: Publish builds to Ubuntu PPA
-  #       uses: ./.github/actions/ubuntu-publish
-  #       with:
-  #         build-folder: ${{ steps.get_package_name.outputs.PACKAGE_NAME }}
-  #         artifact-path: app # build artifacts should be gzipped
-  #         package-name: ${{ steps.get_package_name.outputs.PACKAGE_NAME }}
-  #         email: principals@atomi.cloud # should this be our own email?
-  #         author: ${{ github.repository_owner }}
-  #         section: util
-  #         ci-project-url: https://github.com/${{github.repository}}
-  #         ci-repository-url: https://github.com/${{github.repository}}.git
-  #         target-ppa: mokjn/atomicloud
-  #       env:
-  #         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-  #         GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
-  #         GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
-  #         GPG_KEYID: ${{ secrets.GPG_KEYID }}
